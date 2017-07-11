@@ -1,8 +1,9 @@
 const mq = require('./MessageQueue')();
 
-const eventName = process.argv[2];
+const eventName = 'EvalStarted';//process.argv[2];
 
 mq.connect()
+    .then(()=> console.log('Started MQ'))
     .then(() => mq.subscribe('MailServiceQueue', eventName, onEvalStarted));
 
 
