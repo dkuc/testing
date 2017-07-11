@@ -23,7 +23,7 @@ module.exports = function () {
 
 
     function connect() {
-        return amqp.connect('amqp://172.29.52.242')
+        return amqp.connect('amqp://172.30.89.123')
             .then(conn => conn.createChannel()
                 .then(ch => ch.assertExchange(exchangeName, 'direct', {durable: true})
                     .then(() => {
