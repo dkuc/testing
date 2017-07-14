@@ -1,10 +1,12 @@
 'use strict';
-const  P = require('bluebird');
 
-let i = 0;
-function printMessage() {
-    console.log(i++);
-    return P.delay(1000).then(printMessage);
+if(process.env.ROLE === 'consumer'){
+    console.log('starting consumer');
+    require('./consumer');
 }
-
-printMessage();
+else if(process.env.ROLE === 'producer'){
+    console.log('starting producer');
+    require('./producer');
+}else {
+    console.error('No ROLE specified')
+}
