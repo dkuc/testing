@@ -18,7 +18,7 @@ module.exports = function () {
     }
 
     function publish(type, data) {
-        return channel.publish(exchangeName, type, new Buffer(JSON.stringify(data)));
+        return channel.publish(exchangeName, type, new Buffer(JSON.stringify(data)), {persistent:true});
     }
 
 
