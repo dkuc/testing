@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftWebConsole
+  creationTimestamp: null
+  generation: 1
+  labels:
+    app: rabbitmq
+  name: rabbitmq
+spec:
+  replicas: 1
+  selector:
+    app: rabbitmq
+    deploymentconfig: rabbitmq
+  strategy:
+    activeDeadlineSeconds: 21600
+    recreateParams:
+      timeoutSeconds: 600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftWebConsole
+      creationTimestamp: null
+      labels:
+        app: rabbitmq
+        deploymentconfig: rabbitmq
+    spec:
+      containers:
+      - args:
+        - -c
+        - id; chmod 600 /var/lib/rabbitmq/.erlang.cookie; docker-entrypoint.sh rabbitmq-server
+        command:
+        - sh
+        image: rabbitmq@sha256:8bf289683cf00a7f0f02a9b7af2f3f42369d00921802a0c4aacc9d4a9283b20c
+        imagePullPolicy: IfNotPresent
+        name: rabbitmq
+        ports:
+        - containerPort: 4369
+          protocol: TCP
+        - containerPort: 5671
+          protocol: TCP
+        - containerPort: 5672
+          protocol: TCP
+        - containerPort: 15671
+          protocol: TCP
+        - containerPort: 15672
+          protocol: TCP
+        - containerPort: 25672
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        volumeMounts:
+        - mountPath: /var/lib/rabbitmq
+          name: rabbitmq-1
+      dnsPolicy: ClusterFirst
+      hostname: insightsmq
+      restartPolicy: Always
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: rabbitmq-1
+        persistentVolumeClaim:
+          claimName: mqdatabase
+  test: false
+  triggers:
+  - type: ConfigChange
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - rabbitmq
+      from:
+        kind: ImageStreamTag
+        name: rabbitmq:3.6.10-management
+        namespace: danmq
+    type: ImageChange
+status:
+  availableReplicas: 0
+  latestVersion: 0
+  observedGeneration: 0
+  replicas: 0
+  unavailableReplicas: 0
+  updatedReplicas: 0
